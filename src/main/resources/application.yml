@@ -1,6 +1,10 @@
 spring:
   application:
     name: calculator-devops
+  jackson:
+    generator:
+      # Print 100 rather than 1E+2 in JSON responses
+      write-bigdecimal-as-plain: true
 
 server:
   port: 8080
