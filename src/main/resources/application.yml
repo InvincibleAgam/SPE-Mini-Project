@@ -8,3 +8,22 @@ spring:
 
 server:
   port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      # Adds /actuator/health/liveness and /actuator/health/readiness
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: '@project.name@'
+    version: '@project.version@'
