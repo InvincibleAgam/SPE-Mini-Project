@@ -1,0 +1,59 @@
+# Full stack: 2 calculator replicas behind an nginx reverse proxy / load balancer.
+#
+#   docker compose up -d --build      -> http://localhost:8081/api/v1/add?a=2&b=3
+#
+# Variables (all optional, with defaults for local use):
+#   IMAGE_TAG   calculator image tag; Jenkins sets it to the build number
+#   APP_PORT    host port for the proxy (8081 because Jenkins already uses 8080)
+
+# Fixed project name, so Jenkins and a local checkout manage the same stack
+# no matter which directory they run from
+name: calculator-devops
+
+services:
+  calculator:
+    image: calculator-devops:${IMAGE_TAG:-latest}
+    build: .
+    environment:
+      SERVER_PORT: "8080"
+      # Size the heap from the container's memory limit; exit (and get restarted) on OOM
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError"
+      LOGGING_LEVEL_ROOT: INFO
+    # Reachable only inside the network (through nginx), never published on the host
+    expose:
+      - "8080"
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - calculator-net
+
+  nginx:
+    image: calculator-nginx:latest
+    build: ./nginx
+    ports:
+      - "${APP_PORT:-8081}:80"
+    depends_on:
+      calculator:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/nginx-health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - calculator-net
+
+networks:
+  calculator-net:
+    driver: bridge

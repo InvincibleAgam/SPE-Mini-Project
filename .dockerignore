@@ -1,0 +1,6 @@
+# Allow-list: ignore everything, then re-include only what the Dockerfile needs.
+# Keeps the build context small and stops target/, .git, IDE files and any
+# local secrets from ever being sent to the Docker daemon or baked into a layer.
+*
+!pom.xml
+!src/
