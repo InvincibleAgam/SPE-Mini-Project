@@ -1,0 +1,5 @@
+# Keep Unix line endings on shell scripts so ./mvnw runs on Linux/macOS agents
+# even if the repo is edited on Windows
+mvnw    text eol=lf
+*.sh    text eol=lf
+*.cmd   text eol=crlf
