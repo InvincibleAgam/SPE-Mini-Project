@@ -59,6 +59,21 @@ class CalculatorControllerIntegrationTest {
     }
 
     @Test
+    void moduloReturnsJsonResult() throws Exception {
+        mockMvc.perform(get("/api/v1/modulo").param("a", "10").param("b", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.operation").value("modulo"))
+                .andExpect(jsonPath("$.result").value(1));
+    }
+
+    @Test
+    void moduloByZeroReturns400() throws Exception {
+        mockMvc.perform(get("/api/v1/modulo").param("a", "10").param("b", "0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Division by zero is not allowed"));
+    }
+
+    @Test
     void largeWholeNumbersArePrintedPlainNotInScientificNotation() throws Exception {
         mockMvc.perform(get("/api/v1/multiply").param("a", "1000").param("b", "1000"))
                 .andExpect(status().isOk())

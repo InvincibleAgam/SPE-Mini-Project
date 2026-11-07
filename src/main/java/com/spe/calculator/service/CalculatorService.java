@@ -40,6 +40,16 @@ public class CalculatorService {
         });
     }
 
+    public CalculationResult modulo(double a, double b) {
+        return calculate("modulo", a, b, (x, y) -> {
+            if (y.signum() == 0) {
+                throw new DivisionByZeroException();
+            }
+            // Exact, no MathContext: rounding the integer quotient to 16 digits would throw for e.g. 1e20 % 3
+            return x.remainder(y);
+        });
+    }
+
     private CalculationResult calculate(String operation, double a, double b, BinaryOperator<BigDecimal> operator) {
         BigDecimal x = toDecimal("a", a);
         BigDecimal y = toDecimal("b", b);

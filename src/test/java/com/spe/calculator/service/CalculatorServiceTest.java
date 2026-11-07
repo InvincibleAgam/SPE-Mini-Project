@@ -128,6 +128,32 @@ class CalculatorServiceTest {
     }
 
     @Nested
+    @DisplayName("modulo")
+    class Modulo {
+
+        @ParameterizedTest(name = "{0} % {1} = {2}")
+        @CsvSource({
+                "10, 3, 1",
+                "-7, 3, -1",      // sign follows the dividend, like Java's %
+                "5.5, 2, 1.5",
+                "0.3, 0.1, 0",    // would be 0.09999999999999998 with plain doubles
+                "1e20, 3, 1"      // quotient has more than 16 digits
+        })
+        void returnsRemainder(double a, double b, String expected) {
+            CalculationResult result = calculator.modulo(a, b);
+
+            assertEquals("modulo", result.operation());
+            assertResult(expected, result);
+        }
+
+        @Test
+        void rejectsModuloByZero() {
+            DivisionByZeroException ex = assertThrows(DivisionByZeroException.class, () -> calculator.modulo(5, 0));
+            assertEquals("Division by zero is not allowed", ex.getMessage());
+        }
+    }
+
+    @Nested
     @DisplayName("input validation")
     class Validation {
 

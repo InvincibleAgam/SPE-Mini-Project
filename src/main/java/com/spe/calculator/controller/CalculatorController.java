@@ -36,4 +36,9 @@ public class CalculatorController {
     public CalculationResult divide(@RequestParam double a, @RequestParam double b) {
         return calculator.divide(a, b);
     }
+
+    @GetMapping("/modulo")
+    public CalculationResult modulo(@RequestParam double a, @RequestParam double b) {
+        return calculator.modulo(a, b);
+    }
 }

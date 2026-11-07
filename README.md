@@ -46,6 +46,7 @@ since Jenkins already uses 8080).
 | Subtract  | `GET /api/v1/subtract?a=&b=`   | Returns `a - b`                            |
 | Multiply  | `GET /api/v1/multiply?a=&b=`   | Returns `a * b`                            |
 | Divide    | `GET /api/v1/divide?a=&b=`     | Returns `a / b`; `b=0` → HTTP 400          |
+| Modulo    | `GET /api/v1/modulo?a=&b=`     | Returns the remainder of `a / b`; `b=0` → HTTP 400 |
 | Health    | `GET /actuator/health`         | Spring Actuator health probe (UP/DOWN)     |
 
 ```console
