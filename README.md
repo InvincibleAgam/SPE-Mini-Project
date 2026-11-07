@@ -58,6 +58,9 @@ $ curl "http://localhost:8081/api/v1/add?a=0.1&b=0.2"
 
 $ curl "http://localhost:8081/api/v1/divide?a=10&b=0"
 {"timestamp":"2026-10-28T04:25:52.085Z","status":400,"error":"Bad Request","message":"Division by zero is not allowed","path":"/api/v1/divide"}
+
+$ curl "http://localhost:8081/api/v1/modulo?a=0.3&b=0.1"
+{"operation":"modulo","a":0.3,"b":0.1,"result":0}
 ```
 
 Every invalid request returns HTTP 400 with the same error body:
